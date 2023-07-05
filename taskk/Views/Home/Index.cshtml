@@ -1,0 +1,82 @@
+﻿
+@model IEnumerable<taskk.Models.ProductWithCategory>
+
+
+@{
+    ViewBag.Title = "Index";
+
+    WebGrid webGrid = new WebGrid(Model, canPage: true, rowsPerPage: 2,
+   selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+    webGrid.Pager(WebGridPagerModes.All);
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .Grid {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+        }
+
+            .Grid th {
+                background-color: #F7F7F7;
+                font-weight: bold;
+            }
+
+            .Grid th, .Grid td {
+                padding: 5px;
+                border: 1px solid #ccc;
+            }
+
+            .Grid, .Grid table td {
+                border: 0px solid #ccc;
+            }
+
+                .Grid th a, .Grid th a:visited {
+                    color: #333;
+                }
+    </style>
+</head>
+<body>
+    <center>
+
+        <h1>Products</h1>
+
+        <p style="align-items:initial;">
+            @Html.ActionLink("Create New", "Create")
+        </p>
+
+        @webGrid.GetHtml(
+        htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
+        columns: webGrid.Columns(
+                 webGrid.Column("Product.ProductId", "Product Id"),
+                 webGrid.Column("Product.ProductName", "Product Name"),
+                
+                   webGrid.Column("Product.Category.CategoryName", "Category"),
+
+  webGrid.Column(header: "Action", format: @<text>@Html.ActionLink("Select", null, null, new { @onclick = "return GetSelectedRow(this);" })</text>)
+))
+        <script type="text/javascript">
+
+            function GetSelectedRow(link) {
+                var row = link.parentNode.parentNode;
+                var message = "Selected Row:";
+                message += "\n\n Product Id: " + row.getElementsByTagName("TD")[0].innerHTML;
+                message += "\n Product Name: " + row.getElementsByTagName("TD")[1].innerHTML;
+               
+                message += "\n Category Name: " + row.getElementsByTagName("TD")[2].innerHTML;
+                alert(message);
+                return false;
+            }
+        </script>
+    </center>
+</body>
+</html>
+
